@@ -1,7 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const form = document.querySelector("form");
+    const form = document.getElementById("registration-form");
     const inputs = document.querySelectorAll("input");
-    const feedback = document.getElementById("form-feedback");
+    const feedback = document.createElement("div"); // Optional feedback element
+    form.appendChild(feedback);
 
     form.addEventListener("submit", (event) => {
         event.preventDefault(); // Prevent form submission for validation
@@ -19,19 +20,8 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         });
 
-        if (isValid) {
-            feedback.textContent = "Form submitted successfully!";
-            feedback.style.color = "green";
-
-            // Clear all inputs
-            inputs.forEach((input) => {
-                input.value = ""; // Reset input value
-                input.classList.remove("success"); // Remove success class
-            });
-        } else {
-            feedback.textContent = "Please correct the errors in the form.";
-            feedback.style.color = "red";
-        }
+        feedback.textContent = isValid ? "Form submitted successfully!" : "Please correct the errors in the form.";
+        feedback.style.color = isValid ? "green" : "red";
     });
 
     inputs.forEach((input) => {
@@ -51,16 +41,19 @@ document.addEventListener("DOMContentLoaded", () => {
         const value = input.value.trim();
         const name = input.name;
 
-        if (name === "name") {
-            // Name must be at least 3 characters long
-            return { isValid: value.length >= 3, message: "Name must be at least 3 characters." };
+        if (name === "username") {
+            // Username must be at least 3 characters long
+            return { isValid: value.length >= 3, message: "Username must be at least 3 characters." };
         } else if (name === "email") {
-            // basic email format
+            // Email must match a basic email format
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             return { isValid: emailRegex.test(value), message: "Enter a valid email address." };
+        } else if (name === "password") {
+            // Password must be at least 8 characters long
+            return { isValid: value.length >= 8, message: "Password must be at least 8 characters." };
         }
 
-        // Field must not be empty
+        // Default validation: Field must not be empty
         return { isValid: value !== "", message: "This field is required." };
     }
 });
