@@ -1,59 +1,57 @@
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener('DOMContentLoaded', () => { 
     const form = document.getElementById("registration-form");
-    const inputs = document.querySelectorAll("input");
-    const feedback = document.createElement("div"); // Optional feedback element
-    form.appendChild(feedback);
+    const feedback = document.getElementById("form-feedback");
 
-    form.addEventListener("submit", (event) => {
-        event.preventDefault(); // Prevent form submission for validation
-        let isValid = true;
+    form.addEventListener("submit", function (event) {
+        event.preventDefault(); // Prevent the form from submitting normally
 
-        inputs.forEach((input) => {
-            const validationResult = validateInput(input);
-            if (!validationResult.isValid) {
-                input.classList.add("error");
-                input.classList.remove("success");
-                isValid = false;
-            } else {
-                input.classList.remove("error");
-                input.classList.add("success");
-            }
-        });
-
-        feedback.textContent = isValid ? "Form submitted successfully!" : "Please correct the errors in the form.";
-        feedback.style.color = isValid ? "green" : "red";
+        // Simulate form submission
+        setTimeout(() => {
+            feedback.textContent = "Registration successful!";
+            feedback.style.color = "green";
+            form.reset(); // Reset the form fields
+        }, 1000); // Simulate a delay for the submission
     });
 
-    inputs.forEach((input) => {
-        input.addEventListener("input", () => {
-            const validationResult = validateInput(input);
-            if (validationResult.isValid) {
-                input.classList.remove("error");
-                input.classList.add("success");
-            } else {
-                input.classList.remove("success");
-                input.classList.add("error");
-            }
-        });
-    });
+    // Retrieve form values and trim them
+    const username = document.getElementById("username").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value.trim();
 
-    function validateInput(input) {
-        const value = input.value.trim();
-        const name = input.name;
 
-        if (name === "username") {
-            // Username must be at least 3 characters long
-            return { isValid: value.length >= 3, message: "Username must be at least 3 characters." };
-        } else if (name === "email") {
-            // Email must match a basic email format
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            return { isValid: emailRegex.test(value), message: "Enter a valid email address." };
-        } else if (name === "password") {
-            // Password must be at least 8 characters long
-            return { isValid: value.length >= 8, message: "Password must be at least 8 characters." };
-        }
+    // Initialize validation variables
+    let isValid = true;
+    const messages = [];
 
-        // Default validation: Field must not be empty
-        return { isValid: value !== "", message: "This field is required." };
+    if(username.length < 3) {
+        isValid = false;
+        messages.push("Username must be at least 3 characters long.");
+        password.classList.add("error");
+    }else{
+        password.classList.add("success");
+    }
+    if(!email.includes("@") || !email.includes(".")) {
+        isValid = false;
+        messages.push("Please enter a valid email address.");
+        password.classList.add("error");
+    } else {
+        password.classList.add("success");
+    }
+    if(password.length < 8) {
+        isValid = false;
+        messages.push("Password must be at least 8 characters long.");
+        password.classList.add("error");
+    } else {
+        password.classList.add("success");
+    }
+
+
+    feedback.style.display = 'block';
+    if (isValid) {
+        feedback.textContent = "Registration successful!";
+        feedback.style.color = "green";
+    } else {
+        feedback.textContent = messages.join(" ");
+        feedback.style.color = "red";
     }
 });
