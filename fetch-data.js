@@ -16,7 +16,7 @@ async function fetchUserData() {
         
     } catch (error) {
         dataContainer.innerHTML = '';
-        dataContainer.textContent = 'Error fetching data: ' + error.message;
+        dataContainer.textContent = "Failed to load user data";
     }
     
 }
